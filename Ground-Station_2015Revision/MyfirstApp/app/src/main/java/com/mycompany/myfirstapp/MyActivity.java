@@ -58,8 +58,10 @@ public class MyActivity extends AppCompatActivity {
     private boolean payload = true;
     byte[] drop = {(byte) '0'};
     byte[] load = {(byte) '1'};
-    public int port = 0;
-
+    final byte XON = 0x11;    /* Resume transmission */
+    final byte XOFF = 0x13;    /* Pause transmission */
+    public int port = 0;        //default usb port for radio
+    boolean mThreadIsStopped = true;
     //hardcode the baudrate
     int baud = 9600;
 
@@ -98,7 +100,7 @@ public class MyActivity extends AppCompatActivity {
         tvRelease = (TextView) findViewById(R.id.tvRelease);
 */
         map.setUpMapClickListener();
-        map.setUpButtonsListeners();
+        setUpButtonsListeners();
 
 
 
@@ -236,6 +238,8 @@ public class MyActivity extends AppCompatActivity {
         Toast.makeText(getBaseContext(), "Connected", Toast.LENGTH_LONG).show();
 
     }
+
+
     void setConfig()
     {
         ftDev.setBitMode((byte) 0, D2xxManager.FT_BITMODE_RESET); // reset to UART mode for 232 devices
@@ -244,5 +248,82 @@ public class MyActivity extends AppCompatActivity {
                 D2xxManager.FT_PARITY_NONE);
         ftDev.setFlowControl(D2xxManager.FT_FLOW_RTS_CTS, XON, XOFF);
     }
+
+    private void closeDevice() {
+        //mThreadIsStopped = true;
+        //updateView(false);
+        if(ftDev != null) {
+            ftDev.close();
+        }
+    }
+
+
+    // done when ACTION_USB_DEVICE_ATTACHED
+    @Override
+    protected void onNewIntent(Intent intent) {
+        openDevice();
+    };
+
+    BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) {
+                // never come here(when attached, go to onNewIntent)
+                openDevice();
+            } else if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
+                closeDevice();
+            }
+        }
+    };
+
+    private void openDevice() {
+        if(ftDev != null) {
+            if(ftDev.isOpen()) {
+                if(mThreadIsStopped) {
+                    //updateView(true);
+                    setConfig();
+                    ftDev.purge((byte) (D2xxManager.FT_PURGE_TX | D2xxManager.FT_PURGE_RX));
+                    ftDev.restartInTask();
+                    new Thread(tele.mLoop).start();
+
+                }
+                return;
+            }
+        }
+
+        int devCount = 0;
+        devCount = ftD2xx.createDeviceInfoList(this);
+
+        Log.d(map.TAG, "Device number : "+ Integer.toString(devCount));
+
+        D2xxManager.FtDeviceInfoListNode[] deviceList = new D2xxManager.FtDeviceInfoListNode[devCount];
+        ftD2xx.getDeviceInfoList(devCount, deviceList);
+
+        if(devCount <= 0) {
+            return;
+        }
+
+        if(ftDev == null) {
+            ftDev = ftD2xx.openByIndex(this, 0);
+        } else {
+            synchronized (ftDev) {
+                ftDev = ftD2xx.openByIndex(this, 0);
+            }
+        }
+
+        if(ftDev.isOpen()) {
+            if(mThreadIsStopped) {
+                //updateView(true);
+                setConfig();
+                ftDev.purge((byte) (D2xxManager.FT_PURGE_TX | D2xxManager.FT_PURGE_RX));
+                ftDev.restartInTask();
+                new Thread(tele.mLoop).start();
+            }
+        }
+    }
+
+
+
+
 }
 

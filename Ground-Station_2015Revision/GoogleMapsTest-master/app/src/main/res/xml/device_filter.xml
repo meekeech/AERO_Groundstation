@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--    <usb-device vendor-id="3368"/> &lt;!&ndash; mbed blue VID:0d28 PID:0204 NXP LPC1768 &ndash;&gt;
+        <usb-device vendor-id="4951"/> &lt;!&ndash; mbed yellow VID:1357 PID:0707 P&E Microcomputer Systems &ndash;&gt;
+        <usb-device vendor-id="5538"/> &lt;!&ndash; mbed black VID:15a2 PID:a50f Freescale Semiconductor, Inc. &ndash;&gt;
+        <usb-device vendor-id="1412"/> &lt;!&ndash; REX-USB60F &ndash;&gt;
+        &lt;!&ndash;  0x0403 / 0x6001: FTDI FT232R UART  &ndash;&gt;
+        <usb-device vendor-id="1027" product-id="24577"/>
+        &lt;!&ndash;  0x2341 / Arduino  &ndash;&gt;
+        <usb-device vendor-id="9025"/>
+        &lt;!&ndash;  0x16C0 / 0x0483: Teensyduino   &ndash;&gt;
+        <usb-device vendor-id="5824" product-id="1155"/>
+        &lt;!&ndash;  0x10C4 / 0xEA60: CP210x UART Bridge  &ndash;&gt;
+        <usb-device vendor-id="4292" product-id="60000"/>
+        &lt;!&ndash; 3DR 915MHz radio set FT232R &ndash;&gt;
+        <usb-device vendor-id="0403" product-id="6001"/>-->
+
+    <usb-device vendor-id="1118" product-id="688"/>
+    <usb-device vendor-id="1027" product-id="24577" /> <!-- FT232RL -->
+    <usb-device vendor-id="1027" product-id="24596" /> <!-- FT232H -->
+    <usb-device vendor-id="1027" product-id="24592" /> <!-- FT2232C/D/HL -->
+    <usb-device vendor-id="1027" product-id="24593" /> <!-- FT4232HL -->
+    <usb-device vendor-id="1027" product-id="24597" /> <!-- FT230X -->
+    <usb-device vendor-id="1412" product-id="45088" /> <!-- REX-USB60F -->
+
+</resources>

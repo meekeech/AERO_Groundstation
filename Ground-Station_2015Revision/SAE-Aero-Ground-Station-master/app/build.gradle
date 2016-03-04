@@ -1,0 +1,30 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 20
+    buildToolsVersion "20.0.0"
+
+
+    buildTypes {
+        defaultConfig {
+            applicationId "com.example.duncaniglesias.testmap"
+            minSdkVersion 19
+            targetSdkVersion 20
+            versionCode 1
+            versionName "1.0"
+        }
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    // You must install or update the Google Repository through the SDK manager to use this dependency.
+    compile 'com.google.android.gms:play-services:4.2.42'
+    compile 'com.android.support:support-v4:20.0.0'
+    //compile 'com.android.support:appcompat-v7:21.03'
+    compile files('libs/d2xx.jar')
+}
